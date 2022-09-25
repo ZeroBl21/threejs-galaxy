@@ -109,7 +109,7 @@ const generateGalaxy = () => {
 
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-  geometry.setAttribute('aScale', new THREE.BufferAttribute(colors, 3))
+  geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1))
 
   /**
    * Material
@@ -120,8 +120,8 @@ const generateGalaxy = () => {
     vertexColors: true,
     vertexShader: galaxyVertexShader,
     fragmentShader: galaxyFragmentShader,
-    uniform: {
-      uSize: { value: 8 }
+    uniforms: {
+      uSize: { value: 8 * renderer.getPixelRatio() }
     }
   })
 
@@ -131,8 +131,6 @@ const generateGalaxy = () => {
   points = new THREE.Points(geometry, material)
   scene.add(points)
 }
-
-generateGalaxy()
 
 gui.add(parameters, 'count', 100, 1000000, 100).onFinishChange(generateGalaxy)
 gui.add(parameters, 'size', 0.001, 0.1, 0.001).onFinishChange(generateGalaxy)
@@ -196,6 +194,9 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+// GenerateGalaxy
+generateGalaxy()
+
 /**
  * Animate
  */
@@ -213,5 +214,6 @@ const tick = () => {
   // Call tick again on the next frame
   window.requestAnimationFrame(tick)
 }
+
 
 tick()
